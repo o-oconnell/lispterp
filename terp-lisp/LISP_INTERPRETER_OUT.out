@@ -1,0 +1,94 @@
+10
+10
+10
+NIL
+
+2 is not a function name; try using a symbol instead
+
+(2)
+(+ 1 2)
+(+ a b)
+6
+2
+6
+2
+6
+6
+2
+10
+20
+6
+2
+6
+2
+6
+2
+6
+2
+3
+2
+6
+2
+3
+2
+2
+2
+0
+4
+2.0
+2.0
+8.0
+8.0
+2
+1.4142135623730951
+10
+5
+5
+4
+4
+256
+256
+2
+5
+1
+6
+3
+(ERROR divided by zero)
+10
+-6
+30
+5
+10
+15
+5
+50
+2
+2
+4
+8
+14
+64
+-10
+(FUNCTION: ADD (x y))
+11
+(FUNCTION: SUB (x y))
+1
+(FUNCTION: MUL (x y))
+6
+(FUNCTION: DIV (x y))
+3
+(FUNCTION: ADD2 (x y z))
+6
+(FUNCTION: MUL2 (x y z))
+8
+(FUNCTION: SUB2 (x y z))
+-2
+((Don Smith) 45 3000 (August 25 1980))
+(August 25 1980)
+((1 2 3 (4 (5 (6 (7))) 8) 9 (10 11) 12 13 (14 15) 16 17 18))
+7
+(11)
+(to be or not)
+((to be) or not)
+(FUNCTION: two_to_the_power (n))
+4096

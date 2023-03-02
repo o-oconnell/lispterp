@@ -1,0 +1,84 @@
+grammar Lisp;
+
+inp : expr ;
+
+expr : '(' 'define' ID expr ')' # define
+     | '(' 'defun' ID '(' ID* ')' expr ')' # defun
+
+     | '(' '+' expr expr+ ')' # add
+     | '(' '-' expr expr+ ')' # sub
+     | '(' '*' expr expr+ ')' # mul
+     | '(' '/' expr expr+ ')' # div
+     
+     | '(' 'sqrt' expr ')' # sqrt
+     | '(' 'exp' expr ')' # exp
+     
+     | '(' 'cdr' (list|expr) ')' # cdr
+     | '(' 'car' (list|expr) ')' # car
+     | '(' 'cons' expr expr ')' # cons
+     
+     | '\'' ID # unevaluatedId
+     
+     | list # lst	
+
+     | '(' 'if' expr expr expr ')' # ifstat
+     | '(' 'set!' ID expr ')' # set
+     | '(' 'and' expr expr ')'  # and
+     | '(' 'or' expr expr ')'  # or
+     | '(' 'not' expr ')'    # not
+     | '(' '<' expr expr ')' # lessThan
+     | '(' '>' expr expr ')' # greaterThan
+     | '(' '=' expr expr ')' # eq
+     | '(' '!=' expr expr ')' # neq
+     
+     | 'T' # trueBool
+     | 'NIL' # falseBool
+     
+     | '(' 'if' expr expr expr+ ')' # ifstat
+
+     | '(' ID expr* ')' # funcall
+     | ID  # id
+     | INT # int
+     | STRING # string
+     ;
+
+list : '\'' '(' (atom|nestedList)* ')' ;
+
+nestedList : '(' (atom|nestedList)* ')' ;
+
+atom : ID | INT | SPECIAL_CHAR;
+
+// L e x i c a l  R u l e s
+
+NL	:	'\r'? '\n' ;
+
+
+
+// Includes special characters:
+ID  : LETTER (LETTER | '0'..'9')+  ;
+
+
+
+// Cannot reference LETTER from a parser rule, since
+// fragment indicates it's only intended to be used by other lexer rules
+fragment
+LETTER
+	:   ('a'..'z' | 'A'..'Z')
+    ;
+
+// nongreedy subrule .*? matches the fewest number of chars possible while
+// still allowing the rule around it to match
+STRING:	'"' (ESC|.)*? '"' ;
+
+// allow escaped quotes (\") and escaped backslashes (\\) in strings
+ESC: '\\"' | '\\\\' ;
+
+
+    
+// Skip whitespace
+WS  :   [ \t\r\n]+ -> skip ; // discard all whitespace
+
+// Match otherwise unmatchable regex chars, for nondiscriminatory list
+SPECIAL_CHAR: '+';
+
+

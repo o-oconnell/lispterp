@@ -1,0 +1,21 @@
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
+import java.util.LinkedList;
+import org.antlr.v4.runtime.tree.*;
+
+public class FunctionSymbol {
+    public List<String> formals;
+    public String name;
+    public ParseTree body;
+
+    // Not set initially
+    // MAP formal params to their actual values
+    public Map<String, Object> formalsToActuals = new HashMap<>();
+
+    public FunctionSymbol(String name, List<String> formals, ParseTree body) {
+	this.name = name;
+	this.formals = formals;
+	this.body = body;
+    }    
+}

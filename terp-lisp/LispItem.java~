@@ -1,0 +1,16 @@
+import java.util.List;
+public class LispItem {
+
+    public boolean isAtom;
+    public String atom;
+    public List<LispItem> atoms;
+
+    public LispItem(boolean isAtom, String atom, List<LispItem> atoms) {
+	this.isAtom = isAtom;
+	if (isAtom == true) {
+	    this.atom = atom;
+	} else {
+	    this.atoms = atoms;
+	}
+    }
+}

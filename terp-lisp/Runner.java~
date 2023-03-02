@@ -1,0 +1,99 @@
+/***
+ * Excerpted from "The Definitive ANTLR 4 Reference",
+ * published by The Pragmatic Bookshelf.
+ * Copyrights apply to this code. It may not be used to create training material, 
+ * courses, books, articles, and the like. Contact us if you are in doubt.
+ * We make no guarantees that this code is fit for any purpose. 
+ * Visit http://www.pragmaticprogrammer.com/titles/tpantlr2 for more book information.
+***/
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.tree.ParseTree;
+
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.*;
+import java.util.Scanner;
+import java.util.List;
+import java.util.stream.*;
+
+public class Runner {
+    @SuppressWarnings("deprecation") // ANTLR recently deprecated token streams
+    public static void main(String[] args) throws Exception {
+        String inputFile = null;
+        if ( args.length>0 ) inputFile = args[0];
+
+	Boolean readFromFile = false;
+        InputStream is = System.in;
+        if ( inputFile!=null ) {
+	    is = new FileInputStream(inputFile);
+	    readFromFile = true;
+	}
+	Scanner scan = new Scanner(is);
+	EvalVisitor eval = new EvalVisitor();
+
+	// Allows passing built-in functions as params, e.g. (mapcar '+ ..)
+	generateBuiltInClosures(eval);
+	
+	while (true) {
+	    String inp = null;
+	    try {
+		inp = scan.nextLine();
+		if (readFromFile == true) System.out.println(inp);
+	    } catch (Exception e) {
+		System.out.println("Exiting");
+		break;
+	    }
+	    
+	    ANTLRInputStream input = new ANTLRInputStream(inp);
+	    LispLexer lexer = new LispLexer(input);
+
+	    CommonTokenStream tokens = new CommonTokenStream(lexer);
+	    LispParser parser = new LispParser(tokens);
+	    System.out.print("output: prompt> ");
+	    ParseTree tree = parser.inp(); // parse
+
+	    eval.visit(tree);
+	    System.out.println();
+	}
+    }
+
+    private static final List<String> builtins
+	= Stream.of("(defun + (x y) (+ x y))",
+		    "(defun - (x y) (- x y))",
+		    "(defun * (x y) (* x y))",
+		    "(defun / (x y) (/ x y))",
+		    
+		    "(defun sqrt (x) (sqrt x))",
+		    "(defun exp (x) (exp x))",
+		    "(defun pow (x y) (pow x y))",
+		    
+		    "(defun car (x) (car x))",
+		    "(defun cdr (x) (cdr x))",
+		    "(defun cons (x) (cons x))").collect(Collectors.toList());
+
+    private static class NullOutputStream extends OutputStream {
+	@Override
+	public void write(int b) throws IOException {
+	}
+    }
+
+    @SuppressWarnings("deprecation")
+    private static void generateBuiltInClosures(EvalVisitor eval) {
+	for (String builtin : builtins) {
+	    String inp = null;
+	    
+	    ANTLRInputStream input = new ANTLRInputStream(builtin);
+	    LispLexer lexer = new LispLexer(input);
+
+	    CommonTokenStream tokens = new CommonTokenStream(lexer);
+	    LispParser parser = new LispParser(tokens);
+	    ParseTree tree = parser.inp(); // parse
+
+	    // Don't print inbuilt function definitions
+	    PrintStream out = System.out;
+	    System.setOut(new PrintStream(new NullOutputStream()));
+	    eval.visit(tree);
+	    System.setOut(out);
+	}
+    }
+}

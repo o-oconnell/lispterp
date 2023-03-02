@@ -1,0 +1,18 @@
+My code for this LISP interpreter corresponds completely to the requirements, with the exception of function definitions and parsing errors. Function definitions return as follows:
+
+(defun ADD2 (x y z) (+ (+ x y) z))
+
+output: prompt> (FUNCTION: ADD2 (x y z))
+
+This is for continuity with lambda functions, which also return FunctionSymbol objects to the top-level. It is equally correct this way. 
+
+Parsing errors look like this (no semantic differences from the test cases, just varying output):
+
+input: )
+
+output: prompt> line 1:0 mismatched input ')' expecting {'(', 'define', 'defun', 'mapcar', 'lambda', '+', '-', '*', '/', 'sqrt', 'exp', 'pow', 'cdr', 'car', 'cons', 'if', 'set!', 'and', 'or', 'not', '<', '>', '<=', '>=', '=', '!=', 'T', 'NIL', ''', ID, INT}
+
+
+This is because the ANTLR parser generator was used to construct the interpreter.
+
+Otherwise, all tests in test-complete.txt are passing and you can verify by running `make test`.
